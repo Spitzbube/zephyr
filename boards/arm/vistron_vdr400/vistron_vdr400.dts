@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2023 Spitzbube@mail.bg
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <st/f1/stm32f103Xc.dtsi>
+#include <st/f1/stm32f103r(c-d-e)tx-pinctrl.dtsi>
+
+/ {
+	model = "vistron_vdr400 board";
+	compatible = "st,stm32f103";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		red_led_2: led_2 {
+			gpios = <&gpioe 5 GPIO_ACTIVE_LOW>;
+			label = "LED D2";
+		};
+		red_led_3: led_3 {
+			gpios = <&gpioe 6 GPIO_ACTIVE_LOW>;
+			label = "LED D3";
+		};
+	};
+
+	aliases {
+		led0 = &red_led_3;
+		watchdog0 = &iwdg;
+	};
+};
+
+&clk_lsi {
+	status = "okay";
+};
+
+&clk_hse {
+	clock-frequency = <DT_FREQ_M(8)>;
+	status = "okay";
+};
+
+&pll {
+	mul = <9>;
+	clocks = <&clk_hse>;
+	status = "okay";
+};
+
+&rcc {
+	clocks = <&pll>;
+	clock-frequency = <DT_FREQ_M(72)>;
+	ahb-prescaler = <1>;
+	apb1-prescaler = <2>;
+	apb2-prescaler = <1>;
+};
+
